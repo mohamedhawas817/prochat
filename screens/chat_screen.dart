@@ -4,7 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 
 
 class ChatScreen extends StatelessWidget {
-  const ChatScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +17,9 @@ class ChatScreen extends StatelessWidget {
             if(streamSnapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator(),);
             }
-            return ListView.builder(itemCount: streamSnapshot.data!.docs.length,itemBuilder: (context, index) => Container(
+            return ListView.builder(itemCount: streamSnapshot.data.docs.length,itemBuilder: (context, index) => Container(
                   padding: EdgeInsets.all(8),
-                  child:Text(streamSnapshot.data!.docs[index]['text']) ,
+                  child:Text(streamSnapshot.data.docs[index]['text']) ,
                 )
 
             );
@@ -30,9 +29,13 @@ class ChatScreen extends StatelessWidget {
           ,),
         floatingActionButton: FloatingActionButton(child: Icon(Icons.add),
           onPressed: () {
-          FirebaseFirestore.instance.collection("chats/oHqtZHkHhB3ibJ0V0pnd/messages").snapshots().listen((data) {
-            data.docs.forEach((docu) {print(docu['text']); });
+
+          FirebaseFirestore.instance.collection("chats/oHqtZHkHhB3ibJ0V0pnd/messages").add({
+            "text": "my message to you"
           });
+          // FirebaseFirestore.instance.collection("chats/oHqtZHkHhB3ibJ0V0pnd/messages").snapshots().listen((data) {
+          //   data.docs.forEach((docu) {print(docu['text']); });
+          // });
           },
         ),
       ),
