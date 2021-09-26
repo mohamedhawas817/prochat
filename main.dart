@@ -1,11 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import './screens/chat_screen.dart';
 import './screens/auth_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(HomePage());
 }
-
 class HomePage extends StatelessWidget {
 
   @override
@@ -25,8 +29,17 @@ class HomePage extends StatelessWidget {
           )
         )
       ),
-      home: AuthScreen(),
+      home: StreamBuilder(stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, steam) {
+          if (steam.hasData) {
+            return ChatScreen();
+          }
+          return AuthScreen();
+        }
+    )
+
 
     );
+    }
   }
-}
+

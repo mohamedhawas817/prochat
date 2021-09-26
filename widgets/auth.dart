@@ -3,15 +3,39 @@ import '../widgets/animation.dart';
 
 class AuthWidget extends StatefulWidget {
 
+  Function submitAuth;
+
+  final bool is_loading;
+
+  AuthWidget(this.submitAuth, this.is_loading);
+
   @override
   _AuthWidgetState createState() => _AuthWidgetState();
 }
 
 class _AuthWidgetState extends State<AuthWidget> {
+  final formKey = GlobalKey<FormState>();
+  var is_Login = true;
+  String email = "";
+  String username = "";
+  String password = "";
+
+
+  void tryToSubmt() {
+    final isValid =formKey.currentState.validate();
+    FocusScope.of(context).unfocus();
+    if(isValid) {
+      formKey.currentState.save();
+      widget.submitAuth(email.trim(), username.trim(), password, is_Login, context);
+    }
+    print(email);
+    print(username);
+    print(password);
+  }
+
   @override
   Widget build(BuildContext context) {
 
-    final formKey = GlobalKey<FormState>();
 
     return  SingleChildScrollView(
       child: Container(
@@ -68,7 +92,7 @@ class _AuthWidgetState extends State<AuthWidget> {
                     child: FadeAnimation(1.6, Container(
                       margin: EdgeInsets.only(top: 50),
                       child: Center(
-                        child: Text("Login", style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),),
+                        child: Text(is_Login ? "Login": "Sign Up", style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),),
                       ),
                     )),
                   )
@@ -97,6 +121,10 @@ class _AuthWidgetState extends State<AuthWidget> {
                       child: Column(
                         children: <Widget>[
                         TextFormField(
+
+                          onSaved: (value) {
+                              email = value;
+                          },
                                       validator: (value) {
                                         if(!value.contains("@") || value.isEmpty ) {
                                           return "must be a valid email";
@@ -109,7 +137,12 @@ class _AuthWidgetState extends State<AuthWidget> {
                                       ),
 
                                       ),
+                                    if(!is_Login)
                                       TextFormField(
+
+                                        onSaved: (value) {
+                                          username = value;
+                                        },
                                         validator: (value) {
                                           if(value.isEmpty || value.length < 5) {
                                             return "must be a username";
@@ -121,6 +154,10 @@ class _AuthWidgetState extends State<AuthWidget> {
                                       ),
                                       ),
                                       TextFormField(
+
+                                        onSaved: (value) {
+                                          password = value;
+                                        },
                                         validator: (value) {
                                           if(value.isEmpty || value.length < 5) {
                                             return "must be a password";
@@ -133,8 +170,21 @@ class _AuthWidgetState extends State<AuthWidget> {
                                         obscureText: true,
                                       ),
                                       SizedBox(height: 12,),
-                                      ElevatedButton(onPressed: (){}, child: Text("Login"),),
-                                      TextButton(onPressed: (){}, child: Text("Create An Account"),)
+                                      if(widget.is_loading)
+                                        CircularProgressIndicator(),
+                                      if(!widget.is_loading)
+
+                                      ElevatedButton(onPressed: (){
+                                        tryToSubmt();
+                                      }, child: Text(is_Login ? "Login": "Sign Up"),),
+
+                                      if(!widget.is_loading)
+                                      TextButton( child: Text(is_Login ? "Create An Account" : "i aleardy have an account"),
+                                        onPressed: (){
+                                       setState(() {
+                                         is_Login = !is_Login;
+                                       });
+                                        },)
                         ],
                       ),
                     ),
