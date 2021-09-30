@@ -1,7 +1,8 @@
+import 'package:chat_flutter/chat/message.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ChatScreen extends StatelessWidget {
 
@@ -11,22 +12,34 @@ class ChatScreen extends StatelessWidget {
     return FutureBuilder(
       future: Firebase.initializeApp(),
       builder: (context, snap) =>  Scaffold(
-        body: StreamBuilder<QuerySnapshot>(stream: FirebaseFirestore.instance.collection("chats/oHqtZHkHhB3ibJ0V0pnd/messages").snapshots() ,
-          builder: (context, streamSnapshot) {
-
-            if(streamSnapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator(),);
-            }
-            return ListView.builder(itemCount: streamSnapshot.data.docs.length,itemBuilder: (context, index) => Container(
-                  padding: EdgeInsets.all(8),
-                  child:Text(streamSnapshot.data.docs[index]['text']) ,
+        appBar: AppBar(title: Text("Flutter Chat"),
+          actions: [
+            DropdownButton(icon: Icon(Icons.more_vert),
+              items: [
+                DropdownMenuItem(child: Container(child: Row(
+                  children: [
+                    Icon(Icons.exit_to_app),
+                    SizedBox(width: 8,),
+                    Text("Logout")
+                  ],
+                ),
+                ),
+                  value: 'logout',
                 )
+              ],
+              onChanged: (itemIden) {
+              if(itemIden == 'logout') {
+                  FirebaseAuth.instance.signOut();
+              }
+              },
+            )
+          ],
 
-            );
+        ),
 
-
-          }
-          ,),
+        body: Container(child: Column(children: [
+          Expanded(child: Messages())
+        ],),),
         floatingActionButton: FloatingActionButton(child: Icon(Icons.add),
           onPressed: () {
 
@@ -43,6 +56,25 @@ class ChatScreen extends StatelessWidget {
 
   }
 }
+
+// StreamBuilder<QuerySnapshot>(stream: FirebaseFirestore.instance.collection("chats/oHqtZHkHhB3ibJ0V0pnd/messages").snapshots() ,
+// builder: (context, streamSnapshot) {
+//
+// if(streamSnapshot.connectionState == ConnectionState.waiting) {
+// return Center(child: CircularProgressIndicator(),);
+// }
+// return ListView.builder(itemCount: streamSnapshot.data.docs.length,itemBuilder: (context, index) => Container(
+// padding: EdgeInsets.all(8),
+// child:Text(streamSnapshot.data.docs[index]['text']) ,
+// )
+//
+// );
+//
+//
+// }
+// ,),
+
+
 
 //custom app bar
 // GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
