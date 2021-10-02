@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../chat/new_message.dart';
+
 
 class ChatScreen extends StatelessWidget {
 
@@ -37,20 +39,22 @@ class ChatScreen extends StatelessWidget {
 
         ),
 
-        body: Container(child: Column(children: [
-          Expanded(child: Messages())
+        body: Container(child: Column(
+            children: [
+          Expanded(child: Messages()),
+          NewMessage()
         ],),),
-        floatingActionButton: FloatingActionButton(child: Icon(Icons.add),
-          onPressed: () {
-
-          FirebaseFirestore.instance.collection("chats/oHqtZHkHhB3ibJ0V0pnd/messages").add({
-            "text": "my message to you"
-          });
-          // FirebaseFirestore.instance.collection("chats/oHqtZHkHhB3ibJ0V0pnd/messages").snapshots().listen((data) {
-          //   data.docs.forEach((docu) {print(docu['text']); });
-          // });
-          },
-        ),
+        // floatingActionButton: FloatingActionButton(child: Icon(Icons.add),
+        //   onPressed: () {
+        //
+        //   FirebaseFirestore.instance.collection("chats/oHqtZHkHhB3ibJ0V0pnd/messages").add({
+        //     "text": "my message to you"
+        //   });
+        //   // FirebaseFirestore.instance.collection("chats/oHqtZHkHhB3ibJ0V0pnd/messages").snapshots().listen((data) {
+        //   //   data.docs.forEach((docu) {print(docu['text']); });
+        //   // });
+        //   },
+        // ),
       ),
     );
 
