@@ -1,11 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ChatBubble extends StatelessWidget {
 
 
-  ChatBubble(this.message, this.isme, {this.key});
+  ChatBubble(this.message, this.username ,this.isme, {this.key});
   final String message;
   final bool isme;
+  // final String userId;
+  final String username;
   final Key key;
 
   @override
@@ -35,7 +39,27 @@ class ChatBubble extends StatelessWidget {
             vertical: 4,
             horizontal: 8
           ),
-          child: Text(message ,style: TextStyle(color:  isme ? Colors.black : Theme.of(context).accentTextTheme.headline1.color),),
+          child: Column(
+              crossAxisAlignment: isme ? CrossAxisAlignment.end: CrossAxisAlignment.start,
+            children: [
+              // FutureBuilder(
+              //   future: FirebaseFirestore.instance.collection('users').doc(userId).get(),
+              //   builder: (context, snapshot) {
+              //     if(snapshot.connectionState == ConnectionState.waiting) {
+              //       return Text("Loading...");
+              //     }
+              //
+              //     return Text(
+              //       snapshot.data['username'], style: TextStyle(fontWeight: FontWeight.bold, color:  isme ? Colors.black : Theme.of(context).accentTextTheme.headline1.color),
+              //
+              //     );
+              //   }
+              //
+              // ),
+              Text(username, style: TextStyle(fontWeight: FontWeight.bold, color:  isme ? Colors.black : Theme.of(context).accentTextTheme.headline1.color)),
+              Text(message, textAlign: isme?  TextAlign.end: TextAlign.start ,style: TextStyle(color:  isme ? Colors.black : Theme.of(context).accentTextTheme.headline1.color),),
+            ],
+          ),
         ),
       ],
     );

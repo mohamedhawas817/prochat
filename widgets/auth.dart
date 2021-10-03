@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/animation.dart';
+import '../widgets/picker.dart';
+
 
 class AuthWidget extends StatefulWidget {
 
@@ -120,6 +122,9 @@ class _AuthWidgetState extends State<AuthWidget> {
                       key:formKey ,
                       child: Column(
                         children: <Widget>[
+
+                          ImagePicke(),
+
                         TextFormField(
 
                           onSaved: (value) {
