@@ -7,6 +7,9 @@ import 'package:path_provider/path_provider.dart' as syspaths ;
 
 class ImagePicke extends StatefulWidget {
 
+  ImagePicke(this.imagePickFn);
+  final Function(File _image) imagePickFn;
+
   @override
   _ImagePickeState createState() => _ImagePickeState();
 }
@@ -25,10 +28,11 @@ class _ImagePickeState extends State<ImagePicke> {
         _image = File(imageFile.path);
 
       });
+      widget.imagePickFn(File(imageFile.path));
 
-      final appDir =await syspaths.getApplicationDocumentsDirectory();
-      final fileName =path.basename(imageFile.path);
-      final savedImage =await File(imageFile.path).copy('${appDir.path}/${fileName}');
+      // final appDir =await syspaths.getApplicationDocumentsDirectory();
+      // final fileName =path.basename(imageFile.path);
+      // final savedImage =await File(imageFile.path).copy('${appDir.path}/${fileName}');
 
 
   }
@@ -37,8 +41,8 @@ class _ImagePickeState extends State<ImagePicke> {
     return Column(
       children: [
 
-        CircleAvatar(radius: 30,),
-        TextButton.icon(onPressed: (){}, icon: Icon(Icons.image), label: Text("Add Image")),
+        CircleAvatar(radius: 30, backgroundImage: _image != null ? FileImage(_image) : null , ),
+        TextButton.icon(onPressed:pickImage, icon: Icon(Icons.image), label: Text("Add Image")),
 
 
       ],

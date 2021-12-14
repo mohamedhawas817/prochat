@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../widgets/animation.dart';
 import '../widgets/picker.dart';
-
+import 'dart:io';
 
 class AuthWidget extends StatefulWidget {
 
-  Function submitAuth;
+  final void Function(String email, String password, String username, File image ,bool is_Login, BuildContext context) submitAuth;
 
   final bool is_loading;
 
@@ -21,14 +21,28 @@ class _AuthWidgetState extends State<AuthWidget> {
   String email = "";
   String username = "";
   String password = "";
+  File _userImageFile;
 
+  void pickimageFile(File image) {
+    _userImageFile = image;
+  }
 
   void tryToSubmt() {
     final isValid =formKey.currentState.validate();
+
     FocusScope.of(context).unfocus();
+
+    if(_userImageFile == null && !is_Login) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("please pick a image"),
+        backgroundColor: Theme.of(context).errorColor,
+      )
+      );
+      return;
+    }
+
     if(isValid) {
       formKey.currentState.save();
-      widget.submitAuth(email.trim(), username.trim(), password, is_Login, context);
+      widget.submitAuth(email.trim(), username.trim(), password, _userImageFile  ,is_Login, context);
     }
     print(email);
     print(username);
@@ -123,7 +137,9 @@ class _AuthWidgetState extends State<AuthWidget> {
                       child: Column(
                         children: <Widget>[
 
-                          ImagePicke(),
+                          ImagePicke(pickimageFile),
+
+
 
                         TextFormField(
 
